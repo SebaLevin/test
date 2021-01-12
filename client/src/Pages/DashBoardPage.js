@@ -5,8 +5,9 @@ import Navbar from '../NavBar';
 
 const DashBoardPage = () => {
   const [users, setUsers] = React.useState([]);
-  const [userName, setUserName] = React.useState('')
+  const [userName, setUserName] = React.useState('');
   
+
   const socket = io('http://localhost:8000', {
     withCredentials: true,
     query: {
@@ -14,52 +15,47 @@ const DashBoardPage = () => {
     },
   });
 
-  const getAllUsers = () => {
-    // axios.get('http://localhost:8000/dashboard', {
-    //   headers:{ 
-    //     Authorization: 'Bearer' + localStorage.getItem('CC_Token'),
-    //   },
-    // }).then(response => {
-    //   setUsers(response.data)
-    //   })
-    // .catch(err => {
-    //   console.log(err)
-    // })
-  }
-  
-  const handleDelete = (name) => {
-    const deleted = users.filter(user => user.name !== name)
-    setUsers(deleted)
-    axios.delete('http://localhost:8000/dashboard', name)
-    .then(response => {
-      console.log(name)
-    })
+  const set = () => {
+    setUsers(JSON.parse(localStorage.getItem("users")));
   }
 
-  const getUser = (name) => {
-    setUserName(name);
+  const handleDelete = (id) => {
+    const deleted = users.filter(user => user._id !== id);
+    console.log(deleted)
+    localStorage.setItem("users", JSON.stringify(deleted))
+    set();
   }
 
-  React.useEffect(() => {
-    axios.get('http://localhost:8000/dashboard', {
-      headers:{ 
-        Authorization: 'Bearer' + localStorage.getItem('CC_Token'),
-      },
-    }).then(response => {
-      setUsers(response.data)
-      })
-    .catch(err => {
-      console.log(err)
-    })
-  }, [userName])
+  const getUser = (user) => {
+    setUserName(user);
+  }
 
-  
+  // const getAllUsers = async () => {
+  //   // await axios.get('http://localhost:8000/dashboard', {
+  //   //   headers:{ 
+  //   //     Authorization: 'Bearer' + localStorage.getItem('CC_Token'),
+  //   //   },
+  //   // }).then(response => {
+  //   //     console.log(users)
+  //   //     localStorage.setItem("users", JSON.stringify(response.data))
+  //   //     set();
+  //   //   })
+  //   //   .catch(err => {
+  //   //     console.log(err)
+  //   //   })
+  // }
+
+  // getAllUsers()
+   
+    set();
+     
+    
+    
   
     return (
-      
       <div className="container mb-4">
         <Navbar />
-      <div className="row">
+        <div className="row">
           <div className="col-12 cart-mobile">
               <div className="table-responsive">
                   <table className="table table-striped">
@@ -76,7 +72,7 @@ const DashBoardPage = () => {
                                   <tr>
                                       <td className='card-title w-auto p-3' >{user.name}</td>
                                       <td className="text-right">{user.email} </td>
-                                      <td className="text-right"><button type="button" className="btn btn-outline-warning" data-toggle="modal" data-target="#exampleModal" onClick={() => getUser(user.name)}><i className="fa fa-trash"></i></button> </td>
+                                      <td className="text-right"><button type="button" className="btn btn-outline-warning" data-toggle="modal" data-target="#exampleModal" onClick={() => getUser(user)}><i className="fa fa-trash"></i></button> </td>
                                   </tr>
                               )}
                           <div className="modal fade shadow-lg p-2 mb-5 rounded" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -91,9 +87,9 @@ const DashBoardPage = () => {
                                           </button>
                                       </div>
                                       <div className="modal-body p-3 mb-2 text-dark">
-                                          Estas a punto de eliminar al usuario {userName}</div>
+                                          Estas a punto de eliminar al usuario {userName.name}</div>
                                       <div className="modal-footer bg-dark" >
-                                          <button type="button" class="btn btn-outline-danger" data-dismiss="modal" onClick={() => handleDelete(userName)}> SI  </button>
+                                          <button type="button" class="btn btn-outline-danger" data-dismiss="modal" onClick={() => handleDelete(userName._id)}> SI  </button>
                                           <button type="button" class="btn btn-outline-success" data-dismiss="modal">NO</button>
                                       </div>
                                   </div>

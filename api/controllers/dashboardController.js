@@ -32,11 +32,21 @@ exports.createUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-    const { name } = req.body;
-
-    await User.deleteOne({name: name})
-
-    res.json({
-        message: "User deleted succesfully!"
-    })
+    // const { id } = req.params;
+    // await User.remove({_id: id})
+    // if(!id) {
+    //     res.json({
+    //         message: "User deleted succesfully!"
+    //     })
+    // }
+    console.log(req.params)
+    await User.remove({ _id: req.params.id }, 
+       function(err) { 
+            if (!err) { 
+                console.log('ando'); 
+            } 
+            else { 
+                console.log('no ando'); 
+            } 
+        }); 
 }

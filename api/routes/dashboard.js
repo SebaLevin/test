@@ -6,7 +6,7 @@ const auth = require('../middlewares/auth')
 
 router.get('/', catchErrors(dashboardController.getAllUsers));
 router.post('/', catchErrors(dashboardController.createUser));
-router.delete('/', catchErrors(dashboardController.deleteUser));
+router.delete('/delete', catchErrors(dashboardController.deleteUser));
 
 
 module.exports = router;
